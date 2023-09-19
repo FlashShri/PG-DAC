@@ -1,0 +1,21 @@
+
+
+#ifndef INCLUDE_ILLEGALARGUMENTEXCEPTION_
+#define INCLUDE_ILLEGALARGUMENTEXCEPTION_
+#include<iostream>
+#include<string>
+using namespace std;
+
+namespace exception{
+	class IllegalArgumentException{
+	private:
+		const string message;
+	public:
+		IllegalArgumentException( string message = "Invalid argument" );
+		string getMessage( void )const;
+	};
+}
+
+
+
+#endif /* INCLUDE_ILLEGALARGUMENTEXCEPTION_ */

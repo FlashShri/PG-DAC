@@ -1,0 +1,32 @@
+/*
+ * Comlex.h
+ *
+ *  Created on: 19-Sep-2023
+ *      Author: shrik
+ */
+
+#ifndef INCLUDE_COMPLEX_H_
+#define INCLUDE_COMPLEX_H_
+
+namespace nutil{
+
+	class Complex{
+	private:
+		int real;
+		int imag;
+	public:
+		Complex( int real = 0, int imag  = 0 );
+
+		int getReal( void )const throw( );
+
+		void setReal( const int real );
+
+		int getImag( void )const throw( );
+
+		void setImag( const int imag );
+	};
+}
+
+
+
+#endif /* INCLUDE_COMLEX_H_ */
