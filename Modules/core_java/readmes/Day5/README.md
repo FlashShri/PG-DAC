@@ -812,7 +812,278 @@ public class ClassA{
 5
 75.75
 
+```
+## Day 3
 
 
+```java
+
+class Student{
+    // instance class
+    int roll;
+    double marks;
+
+    void setdata(){
+        // local variable
+        int name;
+        int age ;
+    }
+}
+```
+
+#### Static member of class
+- static member belongs to entire class
+- we use keyword to make a member /data/method of class static
+- static data member => is not part of the object.
+
+```java
+class Demo{
+    int a;
+    int b;
+   static int c;
+
+}
+new Demo();  // now we create obj of Demo
+            // 8 bytes of space for data member inside obj
+            // only int a, int b =>  get space in obj
+
+// here static data int c is part of class and not obj
+```
+- all member fun of class have an access to static data
+
+- but non-static data is part of obj.
+![Alt text](image-8.png)
+
+```java
+class Demo{
+    int a;
+    int b;
+   static int c; // static data
+
+   Demo(){
+    
+   }
+   Demo(int a , int b){
+    this.a = a;
+    this.b = b;
+   }
+   void increment(){  
+    c++;
+   }
+    void printData(){
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(c);
+    }
+}
+class Driver{
+     public static void main(String args[]) {
+       Demo d1 = new Demo(2,4);
+       d1.increment();// c++  // 1
+       d1.printData();  // 2 , 4, 1
+
+       Demo d2 = new Demo(1,5);
+       d2.increment(); // c++ // 2
+       d2.printData(); // 1 ,5 ,2
+
+       Demo d2 = new Demo(3,9);
+       d2.increment(); // c++ // 3
+       d2.printData(); // 3 , 9, 3
+
+    }
+}
 
 ```
+- staic var is called as class variable
+- we can access staic data using clasname
+- bcoz static data is not belong to obj .
+- so only classname is use to 
+
+```java
+class Student{
+    static String school = "ABD"; // static data
+
+}
+class Admin{
+    public static void main(String[] args){
+        System.out.println("School name : "+ Student.school); //here we don't need obj
+    }
+}
+```
+- however we can use obj to access static data.
+```java
+
+class Student{
+    static String school = "ABD"; // static data
+
+}
+class Admin{
+    public static void main(String[] args){
+
+        Student s1 = new Student();
+        System.out.println("School name : "+ s1.school); // this is also fine
+        // but not mandatory
+    }
+}
+```
+
+### singleton class
+
+### static method
+```java
+staic void increament(){
+
+}
+```
+- same rules will apply to static method as static data
+- static method call - obj is not needed
+
+```java
+class Demo{
+    int a;
+    int b;
+    static int  c ;
+
+   static void increament(){
+        c++;
+    }
+}
+class Driver{
+    psvm(){
+        Demo.increament() ;// c++ 
+        System.out.println(Demo.c); // 1
+
+        Demo d1 = new Demo();
+        d1.increament();  // also ok
+
+    }
+}
+```
+
+### rules
+- static methods can only access static member(data and method) of class.
+```java
+static void increament(){
+
+    c++; // static data in static method OK
+    
+    // below lines will get error:  non-static variable a cannot be referenced from a static context
+    a++;
+    a++;
+    b++;
+    sysout(a);
+    sysout(b);
+}
+```
+
+### we can write 
+```java
+static void myFun(){
+    Demo d = new Demo();
+    d.print(); 
+}
+```
+![Alt text](image-9.png)
+
+### Static block
+
+```java
+
+clas Demo{
+    int a;
+    static int b;
+
+    static
+    { // static block
+
+    System.out.println("inside static block");
+
+    }
+
+    { // non-static block
+    
+    System.out.println("inside non-static block");
+
+    }
+}
+class Driver{
+    psvm(){
+
+        new Demo();
+        new Demo();
+    }
+}
+
+```
+- here staic block will get execute only one time => when class is loaded
+- but for every obj non static block get called
+
+#### call by value and call by ref
+
+- all primitive types are passed by value.
+```java
+class Demo{
+    void myFun(int x, int y){ // here x = 5 , y = 6 
+        x += 2;
+        y += 2;
+        System.out.println(x);  // x => 7
+        System.out.println(x);  // y => 8
+    }
+     psvm(){
+        int a =5;
+        int b =6;
+        new Demo.myFun(a,b);
+        System.out.println(a);  // a => 5
+        System.out.println(b);  // b => 6
+    }
+}
+
+```
+- no changes in original data.
+```java
+
+class First{
+    int val;
+
+}
+class Demo{
+    static void myFun(int x, int y){ // here x = 5 , y = 6 
+        x += 2;
+        y += 2;
+        System.out.println(x);  // x => 7
+        Sys
+        tem.out.println(x);  // y => 8
+    }
+    static void anotherFun(First fst){
+        fst.val = 10;
+    }
+    
+}
+class Driver{
+     psvm(){
+        int a =5;
+        int b =6;
+        Demo.myFun(a,b);
+        System.out.println(a);  // a => 5
+        System.out.println(b);  // b => 6
+
+        First f = new First();
+        f.val = 5 ; // we are modifing the data by ref
+        System.out.println(f.val); // now val  = 5
+        Demo.anotherFun(f); // passing ref
+        System.out.println(f.val); // 10
+    }
+}
+```
+
+## package
+
+- collection of classes
+
+- ex java.io => all classes related to input and output 
+- java.lang => lang classes
+- use 'import' to use any package
+- import java.io.FileReader;
+- import java.io.FileWriter;
+- import java.io.*;  => import all classes from io package
+- java.lang package is imported by dafault 
