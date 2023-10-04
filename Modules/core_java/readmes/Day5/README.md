@@ -1090,3 +1090,69 @@ class Driver{
 ![Alt text](image-11.png)
 - mypkg
 ![Alt text](image-12.png)
+
+### jar file - java archive file
+- mainly it contain - class file(byte code)
+- jar cf firstpkg.jar firstpkg
+![Alt text](image-13.png)
+![Alt text](image-14.png)
+
+
+### inheritance
+- types
+### access Specifiers
+- public
+- private
+- ptotected
+- default
+- we don't write default explicitly
+
+![Alt text](image-15.png)
+![Alt text](image-16.png)
+
+```java
+
+package mypkg1;
+class First{
+
+    public int a;
+    private int b;
+    int c;
+    protected int d;  // package level // in other pkg inside child class
+
+    void myFun(){
+     // accessing data in same class => OK 
+      System.out.println(a); 
+      System.out.println(b);
+      System.out.println(c);
+      System.out.println(d); 
+    }
+}
+
+// child class in same package
+package mypkg1;
+class Second extends First {
+    void mySecFun(){
+        // accessing data of parent in child => OK
+      System.out.println(a); // public    => Ok
+      System.out.println(b); // private   => error: b has private access in First
+      System.out.println(c); // default   => OK 
+      System.out.println(d);// protected  => OK
+    }
+}
+```
+- now try this from different package
+```java
+// child class from differnt  package
+package mypkg2;
+public class Third extends First{
+
+    void myThirdFun(){
+      
+      System.out.println(a); // public    => Ok
+      System.out.println(b);// private   => error: b has private access in First
+      System.out.println(c); // default   => Error 
+      System.out.println(d); // protected  => error
+    }
+}
+```
