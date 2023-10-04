@@ -1087,3 +1087,6 @@ class Driver{
 - import java.io.FileWriter;
 - import java.io.*;  => import all classes from io package
 - java.lang package is imported by dafault 
+![Alt text](image-11.png)
+- mypkg
+![Alt text](image-12.png)
