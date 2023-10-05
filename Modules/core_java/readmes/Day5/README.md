@@ -1156,3 +1156,325 @@ public class Third extends First{
     }
 }
 ```
+- Wherever we create obj of child along with child ctor then parent ctor will also get called.
+- order of ctor calling is parent->child
+```java
+class First{
+    First(){
+        System.out.println("in first");
+    }
+}
+class Second extends First{
+    Second(){
+        System.out.println("in second");
+    }
+}
+class Main{
+    public static void main(String[] args){
+        new Second();
+    }
+}
+
+// output:
+in first 
+in second
+```
+- Constructor can't be inherited.
+
+```java
+class First{
+    First(){
+        System.out.println("in first");
+    }
+}
+class Second extends First{
+    Second(){
+        System.out.println("in second");
+    }
+}
+class Third{
+
+    Third(){
+        System.out.println("in third");
+    }
+}
+
+class Main{
+    public static void main(String[] args){
+        new Third();
+    }
+}
+//
+in first 
+in second
+in third
+```
+### overloading
+- method overloading : same name , diff parameter.
+- method overriding : same name , same para.
+```java
+// method overloading
+class First{
+    void myFun(){
+        //code
+    }
+    void myFun(int x){
+        //code
+    }
+}
+```
+
+- overloading possible in same class as well as in child class
+             
+```java
+//method overriding
+class First{
+     void myFun(){
+        //code
+    }
+
+    // overloading in same class
+    void myFun(int x){ 
+        //code
+    }
+}
+class Second extends First{
+
+    //overloaded method in child class
+    void myFun(int x, double d){ 
+        //code
+    }
+}
+```
+#### overriding
+- possible in ***child only***, not within same class
+
+```java
+//method overriding
+class First{
+
+    void myFun(int x){ 
+        //code
+    }
+
+
+    /* 
+    error, not possible in same class
+    void myFun(int y){
+
+    }
+    */
+
+}
+class Second extends First{
+
+    //overrided method in child class
+    // same name same signature(parameter)
+    void myFun(int x){  
+        //code
+    }
+}
+class OverridingDemo{
+    public staic void main(Stirng []args){
+        Second s  = new Second();
+        s.myFun(10); // get called from second class 
+    }
+}
+```
+
+## super keyword
+- it used to call data member , functions of parent class
+- unlike this  which is used to access data of current class.
+- this ->  current class ref
+- super -> imideate parent class ref.
+```java
+class First{
+    void myFun(){
+        System.out.println("myFun() in First");
+    }
+}
+class Second extends First{
+    void anotheFun(){
+        System.out.println("anotherFun() in Second");
+        super.myFun(); // calling fun of parent explicitly
+    }
+}
+class UseOfSuperDemo{
+    public static void main(String [] args){
+        Second s = new Second();
+        
+        s.anotherFun(); // fun of child
+        // here parent fun is also get called
+
+    }
+}
+```
+```java
+class First{
+
+    void myFun(int x){ 
+        System.out.println("myFun() from first");
+}
+}
+class Second extends First{
+    void myFun(int x){  
+        System.out.println("myFun() from second");
+
+        /*
+        myFun(x); // recursive call
+        // we want to call parent myFun()
+        */
+
+        // to do that
+        super.myFun(x); // this will give call to parent fun
+    }
+}
+class OverridingDemo{
+    public staic void main(Stirng []args){
+        Second s  = new Second();
+        s.myFun(10); // get called from second class 
+    }
+}
+
+/* output
+myFun() from second
+myFun() from first
+*/
+```
+
+-  first <- second <- third
+- suppose third extends second and second extends 
+- Third t = new Third();
+t.myfun();
+- then super from third call fun of second
+- then super from second call fun of first
+
+![Alt text](image-17.png)
+- using super we can access member of immediate parent .
+
+- now take data 
+
+![Alt text](image-18.png)
+```java
+// here take variable same in child and perent
+// it works but bot recommended
+class First{
+    int val = 10;
+}
+class Second extends First{
+    int val = 20;
+    void myFun(int x){  
+        System.out.println(val);
+        System.out.println(Super.val);
+    }
+}
+class OverridingDemo{
+    public static void main(String []args){
+        new Second.myFun(11);
+    }
+}
+/*
+20 -> current class
+10 -> parent class
+*/
+```
+### calling super class constructor
+- use super()
+- here call to super class ctor is invoke from child class ctor only.
+- here super() must be first statement
+- we can not use super() ctor call within a non-constructor method
+
+```java
+// ctor chaining useing this
+class First{
+    First(){
+
+    }
+    First(int a){
+        this();
+    }
+    First(int a, int b){
+        this(a);
+    }
+}
+```
+- now example of super()
+
+```java
+class First{
+    private int a; // can't access in child class
+    First(){
+        this.a = 0; // init to default
+    }
+    First(int a){
+        this.a = a;
+    }
+
+    void print(){
+        System.out.println(a);
+    }
+}
+class Second extends First{
+    int b;
+    Second (){
+        this.b = 0; // init to default
+    }
+    Second(int a, int b){
+        // this.a = a // error // bcoz a is private in parent
+        super(a); // call to parent ctor to init a value
+        this.b = b;
+
+    }
+    //overrided
+    void print(){
+        super.print();
+        System.out.println(b);
+    }
+}
+class SuperDemo{
+    public static void main(String[] args){
+        Secont s = new Second(5,10);
+        s.print();
+    }
+}
+```
+
+#### Final
+- data: once data is init it cannot be changed
+- method: cannot be overridden in child class
+- class: cannot be inherited
+
+```java
+
+int a =5;
+    a =10; //ok
+final int b = 5;
+        //b = 10; //error
+```
+```java
+int a ;
+System.out.println(a); // error compile time : have to init local var before use
+```
+```java
+//Ok
+final int a; // final loca;
+        a= 10; // OK
+        a= 15; // error compile time
+```
+```java
+class Firt{
+    final int val;
+
+    void print(){
+        System.out.println(val);
+    }
+}
+class FinalDemo{
+    psvm(){
+        First f = new First(); //
+    }
+}
+```
+![Alt text](image-19.png)
+
+![Alt text](image-20.png)
