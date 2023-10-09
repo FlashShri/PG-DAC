@@ -1478,3 +1478,193 @@ class FinalDemo{
 ![Alt text](image-19.png)
 
 ![Alt text](image-20.png)
+
+### Abstract Class
+-
+ a class whoes instance can not be created
+ - to make a class abstract we use a keyword abstract
+ - if not abstract, then we call it concrete
+ - an abstract class can have zero or more abstract methods.
+ ```java
+ class First{ //concrete
+
+ }
+ abstract class First{ // abstract
+
+ }
+ // new First(); // not possible
+ ```
+ ```java
+ abstract class First{
+    abstract void myFun(); // abst method 
+ }
+ ```
+ - a method which is has no body only declaration is called abstract method
+ - if a 
+
+ ![Alt text](image-21.png)
+ ![Alt text](image-22.png)
+
+ ```java
+ class First{
+    void myFun(){
+
+    }
+ }
+ class Second extends First{
+    void myFun(){
+
+    }
+ }
+ class Driver{
+    psvm(){
+        First f = new Second ();//ok  must be IS-A relation
+        f.myFun(); // get call from second
+    }
+ }
+ ```
+ ![Alt text](image-23.png)
+ ![Alt text](image-24.png)
+ ![Alt text](image-25.png)
+ ![Alt text](image-26.png)
+ ![Alt text](image-27.png)
+ ![Alt text](image-28.png)
+ ![Alt text](image-29.png)
+ ![Alt text](image-30.png)
+ - here need to inplement all methods of all interface
+ - ![Alt text](image-31.png)
+ - ![Alt text](image-32.png)
+ - in this case myfun() is just declareation in both of the interfaces.
+ - they are the same.
+ - ![Alt text](image-33.png)
+ - ![Alt text](image-34.png)
+
+- ![Alt text](image-35.png)
+![Alt text](image-36.png)
+
+![Alt text](image-37.png)
+![Alt text](image-38.png)
+
+
+```java
+
+class First{
+
+    int a ;
+    int b ;
+    First()
+    {
+
+    }
+    First(int a, int b){
+        this.a = a;
+        this.b = b ;
+
+    }
+}
+
+class ObjDemo{
+    public static void main(String[] args){
+        First f1 = new Frist(5,10); 
+        First f2 = new First(5,10);
+
+        /// here shallow comparions is happens => checks only ref 
+        // boolean equals() from Object class 
+        // f1.equals(f2) => false
+
+        if(f1.equals(f2))  
+        {
+            System.out.println("f1 == f2");
+        }else{
+            System.out.println("f1 != f2");
+        }
+
+    // int hashCode()
+    // hashCode can equal or not
+
+    // here hashCode is not equal
+
+         System.out.println("hashCode of f1: "+f1.hashCode());
+         System.out.println("hashCode of f2: "+f2.hashCode());
+        
+        // String toString() ; // returns String
+
+        System.out.println("f1.toString(): 
+            "+f1.toString()); // First@4aa298b7 => 4aa298b7 => convert it into decimal => we will get hashCode
+
+        System.out.println("f2.toString():  "+f2.toString()); // First@7d4991ad ==> returns class name + @ + hashCode in hexadecimal values
+
+        System.out.println(f1); // this get evaluate as f1.toString();
+
+        // finalize() => used during garbage collection.
+
+        if( f1 == f2 ){ // always shallow comparison
+             
+        }
+    
+    }
+}
+
+```
+![Alt text](image-39.png)
+
+- ==  => always does shallow comparison. compare ref , not object.
+- its behaviour can not be changed by any mean.
+
+```java
+
+class First{
+
+    int a ;
+    int b ;
+    First()
+    {
+
+    }
+    First(int a, int b){
+        this.a = a;
+        this.b = b ;
+
+    }
+}
+
+class ObjDemo{
+    public static void main(String[] args){
+        First f1 = new Frist(5,10); 
+        First f2 = new First(5,10);
+
+ 
+
+        if(f1.equals(f2))  
+        {
+            System.out.println("f1 == f2");
+        }else{
+            System.out.println("f1 != f2");
+        }
+
+    // int hashCode()
+    // hashCode can equal or not
+
+    // here hashCode is not equal
+
+         System.out.println("hashCode of f1: "+f1.hashCode());
+         System.out.println("hashCode of f2: "+f2.hashCode());
+        
+        // String toString() ; // returns String
+
+        System.out.println("f1.toString(): 
+            "+f1.toString()); // First@4aa298b7 => 4aa298b7 => convert it into decimal => we will get hashCode
+
+        System.out.println("f2.toString():  "+f2.toString()); // First@7d4991ad ==> returns class name + @ + hashCode in hexadecimal values
+
+        System.out.println(f1); // this get evaluate as f1.toString();
+
+        // finalize() => used during garbage collection.
+
+        if( f1 == f2 ){ // always shallow comparison
+             
+        }
+    
+    }
+}
+```
