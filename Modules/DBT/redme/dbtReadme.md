@@ -1306,3 +1306,365 @@ SELECT * from emp WHERE job='SALESMAN';
 ```SQL
 SELECT * from emp WHERE Job='analyst' AND deptno=20;
 ```
+
+# DAY 5
+
+#### some assignment questionsd
+ - select * from orders where (amt < 1000 OR NOT(odate= '1990-10-03' AND cnum > 2003));
+
+ ```SQL
+ mysql> Select * from orders;
++------+---------+------------+------+------+
+| Onum | Ant     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1990-10-03 | 2008 | 1007 |
+| 3003 |  767.19 | 1990-10-03 | 2001 | 1001 |
+| 3002 | 1900.10 | 1990-10-03 | 2007 | 1004 |
+| 3005 | 5160.45 | 1990-10-03 | 2003 | 1002 |
+| 3006 | 1098.16 | 1990-10-03 | 2008 | 1007 |
+| 3009 | 1713.23 | 1990-10-04 | 2002 | 1003 |
+| 3007 |   75.75 | 1990-10-04 | 2004 | 1002 |
+| 3008 | 4723.00 | 1990-10-05 | 2006 | 1001 |
+| 3010 | 1309.95 | 1990-10-06 | 2004 | 1002 |
+| 3011 | 9891.88 | 1990-10-06 | 2006 | 1001 |
++------+---------+------------+------+------+
+
+mysql> select * from orders where (Ant < 1000 OR NOT(Odate= '1990-10-03' AND Cnum > 2003));
++------+---------+------------+------+------+
+| Onum | Ant     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1990-10-03 | 2008 | 1007 |
+| 3003 |  767.19 | 1990-10-03 | 2001 | 1001 |
+| 3005 | 5160.45 | 1990-10-03 | 2003 | 1002 |
+| 3009 | 1713.23 | 1990-10-04 | 2002 | 1003 |
+| 3007 |   75.75 | 1990-10-04 | 2004 | 1002 |
+| 3008 | 4723.00 | 1990-10-05 | 2006 | 1001 |
+| 3010 | 1309.95 | 1990-10-06 | 2004 | 1002 |
+| 3011 | 9891.88 | 1990-10-06 | 2006 | 1001 |
++------+---------+------------+------+------+
+-- but how this output came 
+ ```
+- our query was :
+- select * from orders where (Ant < 1000 OR NOT(Odate= '1990-10-03' AND Cnum > 2003)); 
+- lets break it
+- select * from orders -> 10 rows
+- first condition : where data is '1990-10-03'
+- 
+```SQL
+- mysql> Select * from orders where Odate= '1990-10-03' ;
++------+---------+------------+------+------+
+| Onum | Ant     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1990-10-03 | 2008 | 1007 |
+| 3003 |  767.19 | 1990-10-03 | 2001 | 1001 |
+| 3002 | 1900.10 | 1990-10-03 | 2007 | 1004 |
+| 3005 | 5160.45 | 1990-10-03 | 2003 | 1002 |
+| 3006 | 1098.16 | 1990-10-03 | 2008 | 1007 |
++------+---------+------------+------+------+
+- 
+- mysql>  Select * from orders where Odate= '1990-10-03'  AND Cnum > 2003;
++------+---------+------------+------+------+
+| Onum | Ant     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1990-10-03 | 2008 | 1007 |
+| 3002 | 1900.10 | 1990-10-03 | 2007 | 1004 |
+| 3006 | 1098.16 | 1990-10-03 | 2008 | 1007 |
++------+---------+------------+------+------+
+-
+- but we have to exclude this from our result
+- 
+- mysql>  Select * from orders WHERE NOT(Odate= '1990-10-03'  AND Cnum > 2003);
++------+---------+------------+------+------+
+| Onum | Ant     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3003 |  767.19 | 1990-10-03 | 2001 | 1001 |
+| 3005 | 5160.45 | 1990-10-03 | 2003 | 1002 |
+| 3009 | 1713.23 | 1990-10-04 | 2002 | 1003 |
+| 3007 |   75.75 | 1990-10-04 | 2004 | 1002 |
+| 3008 | 4723.00 | 1990-10-05 | 2006 | 1001 |
+| 3010 | 1309.95 | 1990-10-06 | 2004 | 1002 |
+| 3011 | 9891.88 | 1990-10-06 | 2006 | 1001 |
++------+---------+------------+------+------+
+- now we get remaining records where 
+-
+- there is one more condition 
+- Select * from orders WHERE Ant < 1000 ;
+- we will these records
+- mysql> Select * from orders WHERE Ant < 1000 ;
++------+--------+------------+------+------+
+| Onum | Ant    | Odate      | Cnum | Snum |
++------+--------+------------+------+------+
+| 3001 |  18.69 | 1990-10-03 | 2008 | 1007 |
+| 3003 | 767.19 | 1990-10-03 | 2001 | 1001 |
+| 3007 |  75.75 | 1990-10-04 | 2004 | 1002 |
++------+--------+------------+------+------+
+```
+-
+- now our main query was =>  select * from orders where (Ant < 1000 OR NOT(Odate= '1990-10-03' AND Cnum > 2003));
+
+- . 
+- .
+- In C programming  : precedence : || << && << ! (highest) 
+- In RDBMS : NOT < AND < OR  same as C
+
+####  Write a query on Customers table whose output will exckude all customers with a rating <= 100 , unless they are located in Rome
+- 
+
+```SQL
+mysql> select * from customers where NOT( rating <= 100) OR city='Rome' ;
+
+mysql>  select * from customers where NOT(rating <= 100 AND city != 'Rome' );
+
+-- both of the queries give same output 
+```
+### where vs When
+- where : is to fetch selected row - for which given condition is true -- after FROM tablename.
+- case...when : is for computed colunm  -- before FROM tablename;
+
+```SQL
+-- where VS when
+
+ SELECT empno , ename,job, sal,
+    CASE
+    WHEN sal <= 1500 THEN 'Poor'
+    WHEN sal > 1500 AND sal <= 2500 THEN 'Middle'
+    ELSE 'Rich'
+    END AS  'SalaryCategory'
+    FROM emp
+    WHERE job = 'salesman';
++-------+--------+----------+---------+----------------+
+| empno | ename  | job      | sal     | SalaryCategory |
++-------+--------+----------+---------+----------------+
+|  7499 | Allen  | Salesman | 1600.00 | Middle         |
+|  7521 | Ward   | Salesman | 1250.00 | Poor           |
+|  7654 | Martin | Salesman | 1250.00 | Poor           |
++-------+--------+----------+---------+----------------+
+```
+
+
+
+```SQL
+mysql> Select * from salespeople;
++------+---------+-----------+------+
+| Snum | Sname   | City      | Comm |
++------+---------+-----------+------+
+| 1001 | Peel    | London    | 0.12 |
+| 1002 | Serres  | San Jose  | 0.13 |
+| 1007 | Rifkin  | Barcelona | 0.15 |
+| 1003 | Axelrod | New York  | 0.10 |
+| 1003 | Motika  | London    | 0.11 |
++------+---------+-----------+------+
+
+```
+## Dealing with NULL 
+
+- NULL doesn't work with relational and logical operator
+- need special operators here 
+    * IS NULL or <=>
+    * IS NOT NULL 
+```SQL
+-- find all emp whose comm is null
+mysql> SELECt * from emp where comm = NULL ;
+Empty set (0.00 sec)
+-- not working with = operator
+
+mysql> SELECT empno, ename , comm from emp where comm IS NULL ;
++-------+-------+------+
+| empno | ename | comm |
++-------+-------+------+
+|  7369 | Smith | NULL |
+|  7566 | Jones | NULL |
+|  7698 | Blake | NULL |
+|  7782 | Clark | NULL |
+|  7788 | Scott | NULL |
+|  7839 | King  | NULL |
+|  7902 | Ford  | NULL |
++-------+-------+------+
+
+-- same optput with 
+mysql> SELECT empno, ename , comm from emp where comm <=> NULL ;
+
+-- <=>   -> this is not compatible with all RDBMS , works with mysql
+-- but  IS NULL is ANSI standard 
+
+
+mysql> SELECT empno, ename , comm from emp where comm IS NOT NULL ;
++-------+--------+---------+
+| empno | ename  | comm    |
++-------+--------+---------+
+|  7499 | Allen  |  300.00 |
+|  7521 | Ward   |  500.00 |
+|  7654 | Martin | 1400.00 |
++-------+--------+---------+
+```
+
+## simplification of the query
+- BETWEEN operator
+- more readable 
+- faster
+- NOT BETWEEN
+```SQL
+-- get all emp whose sal is between 1500 and 2000
+
+mysql> SELECT * from emp where sal >= 1500 AND sal <= 2000 ;
+
+-- can we do it in more simple way?
+-- use between operator
+
+SELECT * from emp where sal between 1500 AND 2000;
+
+-- here sal is inclusive
+
+-- now get emp hired in year 1982.
+mysql> SELECT * from emp where hire BETWEEN '1982-01-01' AND '1982-12-31' ;
++-------+-------+---------+------+------------+---------+------+--------+
+| empno | ename | job     | mgr  | hire       | sal     | comm | deptno |
++-------+-------+---------+------+------------+---------+------+--------+
+|  7788 | Scott | Analyst | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
++-------+-------+---------+------+------------+---------+------+--------+
+
+-- get all emp whose name is between 'F' to 'M' ;
+mysql> SELECT * from emp where ename BETWEEN 'F' AND 'M' ;
++-------+-------+-----------+------+------------+---------+------+--------+
+| empno | ename | job       | mgr  | hire       | sal     | comm | deptno |
++-------+-------+-----------+------+------------+---------+------+--------+
+|  7566 | Jones | Manager   | 7839 | 1981-04-02 | 2975.00 | NULL |     20 |
+|  7839 | King  | President | NULL | 1981-11-17 | 5000.00 | NULL |     10 |
+|  7902 | Ford  | Analyst   | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
++-------+-------+-----------+------+------------+---------+------+--------+
+-- but this is not giving ename with M 
+-- here F is inclusive but M is not 
+-- Ford 
+-- Jones 
+-- King 
+-- Martin 
+--  here Martin is after M --> means in dictionary M comes before MArtin 
+
+-- but if 
+-- F
+-- Ford 
+-- Jones 
+-- King 
+-- M
+-- Martin 
+
+-- but I want all whose start with M 
+-- there is trick -- use BETWEEN 'F AND 'N' --> but not recommended
+-- bcoz the record with ename == 'L' will also fetched but we dont want that
+
+-- instead use this 
+-- BETWEEN 'F AND 'N' AND ename != 'L' ; --> here we skipping the L
+ 
+ mysql> SELECT * from emp where ename BETWEEN 'F' AND 'N' AND ename != 'L' ;
++-------+--------+-----------+------+------------+---------+---------+--------+
+| empno | ename  | job       | mgr  | hire       | sal     | comm    | deptno |
++-------+--------+-----------+------+------------+---------+---------+--------+
+|  7566 | Jones  | Manager   | 7839 | 1981-04-02 | 2975.00 |    NULL |     20 |
+|  7654 | Martin | Salesman  | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7839 | King   | President | NULL | 1981-11-17 | 5000.00 |    NULL |     10 |
+|  7902 | Ford   | Analyst   | 7566 | 1981-12-03 | 3000.00 |    NULL |     20 |
++-------+--------+-----------+------+------------+---------+---------+--------+
+-- now see all emp between F - M inclusive came 
+
+
+-- what if I want record with 'Z' then with this we cannot fetch it
+```
+### IN operator
+
+```SQL
+-- find all ANALYST , MANAGER , PRESIDENT 
+mysql> SELECT * from emp where job='Analyst' OR job='Manager' OR job='President';
+-- OR
+mysql> SELECT * from emp where job IN ( 'Analyst' , 'Manager' , 'President');
+-- by using IN operator 
+-- more readale for comparing equallity with multiple values
+-- faster than OR
+
+-- reverse of IN --> NOT IN
+```
+### LIKE operator
+* find similar name
+* special character (wildcard)
+    * '%' : any no of any characters
+    * '_' : single any character
+```SQL
+-- get all emp whose name start with B
+SELECT * from emp where ename LIKE 'B%' ;// starts with B we dont bother after B
+
+
+-- get all emp whose name ends with H
+SELECT * from emp where ename LIKE '%H' ; -- here H is after % means we dont bother whatever comes before H
+mysql> SELECT * from emp where ename LIKE '%H' ;
++-------+-------+-------+------+------------+--------+------+--------+
+| empno | ename | job   | mgr  | hire       | sal    | comm | deptno |
++-------+-------+-------+------+------------+--------+------+--------+
+|  7369 | Smith | Clerk | 7902 | 1980-12-17 | 800.00 | NULL |     20 |
++-------+-------+-------+------+------------+--------+------+--------+
+
+-- get all emp whose name contains O anywhere in name;
+SELECT * from emp where ename LIKE '%O%';
+mysql> SELECT * from emp where ename LIKE '%O%';
++-------+-------+---------+------+------------+---------+------+--------+
+| empno | ename | job     | mgr  | hire       | sal     | comm | deptno |
++-------+-------+---------+------+------------+---------+------+--------+
+|  7566 | Jones | Manager | 7839 | 1981-04-02 | 2975.00 | NULL |     20 |
+|  7788 | Scott | Analyst | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
+|  7902 | Ford  | Analyst | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
++-------+-------+---------+------+------------+---------+------+--------+
+
+-- get all emp whose name contains any four letters 
+-- means name with four letters
+mysql> SELECT empno , ename from emp where ename LIKE '____' ;
++-------+-------+
+| empno | ename |
++-------+-------+
+|  7521 | Ward  |
+|  7839 | King  |
+|  7902 | Ford  |
++-------+-------+
+-- here we just give 4 underscores 
+
+-- get all emp name starts with K and having only four letters 
+mysql> SELECT empno , ename from emp where ename LIKE 'K___' ;
++-------+-------+
+| empno | ename |
++-------+-------+
+|  7839 | King  |
++-------+-------+
+-- k and 3 underscores
+
+
+-- get all emp name contains l twice
+SELECT * from emp where ename LIKE '%L%L%';
+mysql> SELECT * from emp where ename LIKE '%L%L%';
++-------+-------+----------+------+------------+---------+--------+--------+
+| empno | ename | job      | mgr  | hire       | sal     | comm   | deptno |
++-------+-------+----------+------+------------+---------+--------+--------+
+|  7499 | Allen | Salesman | 7698 | 1981-02-20 | 1600.00 | 300.00 |     30 |
+
+
+-- get all emp name contains L only once 
+SELECT * from emp where ename LIKE '%_A%';
+mysql> SELECT * from emp where ename LIKE '%_A%';
++-------+--------+----------+------+------------+---------+---------+--------+
+| empno | ename  | job      | mgr  | hire       | sal     | comm    | deptno |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7521 | Ward   | Salesman | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | Martin | Salesman | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7698 | Blake  | Manager  | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+|  7782 | Clark  | Manager  | 7839 | 1981-06-09 | 2450.00 |    NULL |     10 |
++-------+--------+----------+------+------------+---------+---------+--------+
+-- name contains only one A 
+
+
+mysql> SELECT * from emp where ename LIKE '%L%' AND ename NOT LIKE '%L%L%';
++-------+-------+---------+------+------------+---------+------+--------+
+| empno | ename | job     | mgr  | hire       | sal     | comm | deptno |
++-------+-------+---------+------+------------+---------+------+--------+
+|  7698 | Blake | Manager | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
+|  7782 | Clark | Manager | 7839 | 1981-06-09 | 2450.00 | NULL |     10 |
++-------+-------+---------+------+------------+---------+------+--------+
+-- this is also the right approach
+-- LIKE '%L%' --> fetch all with L
+-- NOT LIKE '%L%L%'  --> skip those with double ll ;
+```
