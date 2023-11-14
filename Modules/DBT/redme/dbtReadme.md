@@ -1668,3 +1668,420 @@ mysql> SELECT * from emp where ename LIKE '%L%' AND ename NOT LIKE '%L%L%';
 -- LIKE '%L%' --> fetch all with L
 -- NOT LIKE '%L%L%'  --> skip those with double ll ;
 ```
+* "%" means 0 or more occurrences of any character.
+```SQl
+SELECT * from emp WHERE ename LIKE '%LL%' ;
+
+-- here '%LL%' is for consecative type like 'Aellen' ;
+
+-- but when character contains twice but not consecutive letter
+SELECT * from emp WHERE ename LIKE '%A%A%'; 
+-- this query will fetch all emp whose name contains which has A twice , not consecutive
+
+
+-- finds all emp whose name contains A - either once , twice, thrice doesn't matter
+SELECT * from emp WHERE ename LIKE '%A%' ;
+-- here A contains A once and more than once
+-- like MARTIN, ADAMS(2 A)
+
+-- finds what if I want to find nmae contains A only once
+SELECT * from emp WHERE (ename LIKE '%A%') AND (ename NOT LIKE '%A%A%') ;
+-- here ADAMS will get skipped 
+-- and all other name contains more than one will also get skipped.
+
+```
+```SQL
+-- find all emp between F and K
+SELECT * from emp WHERE ename BETWEEN 'F' AND 'K';
+-- here both are inclusive but only upto K not all words 
+
+
+SELECT * from emp WHERE ename BETWEEN 'F' AND 'K' OR ename LIKE 'K%' ;
+-- this is other way 
+mysql> SELECT empno, ename , sal from emp WHERE ename BETWEEN 'F' AND 'K' OR ename LIKE 'K%' ;
++-------+-------+---------+
+| empno | ename | sal     |
++-------+-------+---------+
+|  7566 | Jones | 2975.00 |
+|  7839 | King  | 5000.00 |
+|  7902 | Ford  | 3000.00 |
++-------+-------+---------+
+-- see here king is also displayed
+-- ename BETWEEN 'F' AND 'K'-- this will fetch 
+-- all names starts with F to K only not king
+-- here OR ename LIKE 'K%' -- this part will include words starts with K.
+
+```
+```SQL
+-- finds ename starts from s to z
+-- here will not invole those starts with z like zebra
+SELECT empno, ename , sal from emp WHERE ename BETWEEN 'S' AND 'Z' OR ename LIKE 'Z%' ;
+```
+
+## UPDATE clause (DML) 
+![Alt text](image-16.png)
+
+```SQL
+mysql> SELECT * from book;
++----+---------+-----------+-----------+-------+
+| id | name    | author    | subject   | price |
++----+---------+-----------+-----------+-------+
+|  1 | Book 1  | Author 1  | Subject A | 19.99 |
+|  2 | Book 2  | Author 2  | Subject B | 24.95 |
+|  3 | Book 3  | Author 3  | Subject C | 15.49 |
+|  4 | Book 4  | Author 4  | Subject A | 29.99 |
+
+-- now lets modify some data
+mysql> UPDATE book SET price= 23.45 WHERE id= 1;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * from book;
++----+---------+-----------+-----------+-------+
+| id | name    | author    | subject   | price |
++----+---------+-----------+-----------+-------+
+|  1 | Book 1  | Author 1  | Subject A | 23.45 |
+|  2 | Book 2  | Author 2  | Subject B | 24.95 |
+|  3 | Book 3  | Author 3  | Subject C | 15.49 |
+
+-- see price of book 1 is updated 
+```
+```SQl
+-- lets modify multiple columns in one query 
+mysql> UPDATE book SET author='Yashwant P Kanetkar' , subject='C programming' WHERE id = 1 ;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * from book;
++----+---------+---------------------+---------------+-------+
+| id | name    | author              | subject       | price |
++----+---------+---------------------+---------------+-------+
+|  1 | Book 1  | Yashwant P Kanetkar | C programming | 23.45 |
+|  2 | Book 2  | Author 2            | Subject B     | 24.95 |
+|  3 | Book 3  | Author 3            | Subject C     | 15.49 |
+```
+
+* In real world scenario we only need to change one row OR record at a time
+```SQL
+-- if we want to update multiple records 
+-- like
+-- change price of all books of Subject A
+UPDATE book SET price = price + price* 0.10 WHERE subject = 'Subject A' ;
+
+mysql> SELECT subject , price from book WHERE Subject= 'Subject A';
++-----------+-------+
+| subject   | price |
++-----------+-------+
+| Subject A | 32.99 |
+| Subject A | 21.99 |
+| Subject A | 15.95 |
+| Subject A | 18.43 |
++-----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE book SET price=price + price* 0.10 WHERE subject= 'Subject A';
+Query OK, 4 rows affected, 4 warnings (0.01 sec)
+Rows matched: 4  Changed: 4  Warnings: 4
+
+mysql> SELECT subject , price from book WHERE Subject= 'Subject A';
+                                                                  +-----------+-------+
+| subject   | price |
++-----------+-------+
+| Subject A | 36.29 |
+| Subject A | 24.19 |
+| Subject A | 17.55 |
+| Subject A | 20.27 |
++-----------+-------+
+4 rows in set (0.00 sec)
+
+-- see the 10 % change in price
+```
+
+```SQL
+
+-- increase price of all books by 5% (0.05)
+
+mysql> SELECT * from book;
++----+---------+---------------------+---------------+-------+
+| id | name    | author              | subject       | price |
++----+---------+---------------------+---------------+-------+
+|  1 | Book 1  | Yashwant P Kanetkar | C programming | 23.45 |
+|  2 | Book 2  | Author 2            | Subject B     | 24.95 |
+|  3 | Book 3  | Author 3            | Subject C     | 15.49 |
+|  4 | Book 4  | Author 4            | Subject A     | 36.29 |
+|  5 | Book 5  | Author 5            | Subject D     |  9.99 |
+|  6 | Book 6  | Author 6            | Subject B     | 32.50 |
+|  7 | Book 7  | Author 7            | Subject A     | 24.19 |
+|  8 | Book 8  | Author 8            | Subject C     | 21.75 |
+|  9 | Book 9  | Author 9            | Subject D     | 12.99 |
+| 10 | Book 10 | Author 10           | Subject B     | 17.25 |
+| 11 | Book 11 | Author 11           | Subject A     | 17.55 |
+| 12 | Book 12 | Author 12           | Subject C     | 23.75 |
+| 13 | Book 13 | Author 13           | Subject D     | 28.99 |
+| 14 | Book 14 | Author 14           | Subject B     |  9.99 |
+| 15 | Book 15 | Author 15           | Subject A     | 20.27 |
++----+---------+---------------------+---------------+-------+
+15 rows in set (0.00 sec)
+
+mysql> UPDATE book SET price=price+price*0.05 ;
+Query OK, 15 rows affected, 15 warnings (0.01 sec)
+Rows matched: 15  Changed: 15  Warnings: 15
+
+mysql> SELECT * from book;
++----+---------+---------------------+---------------+-------+
+| id | name    | author              | subject       | price |
++----+---------+---------------------+---------------+-------+
+|  1 | Book 1  | Yashwant P Kanetkar | C programming | 24.62 |
+|  2 | Book 2  | Author 2            | Subject B     | 26.20 |
+|  3 | Book 3  | Author 3            | Subject C     | 16.26 |
+|  4 | Book 4  | Author 4            | Subject A     | 38.10 |
+|  5 | Book 5  | Author 5            | Subject D     | 10.49 |
+|  6 | Book 6  | Author 6            | Subject B     | 34.13 |
+|  7 | Book 7  | Author 7            | Subject A     | 25.40 |
+|  8 | Book 8  | Author 8            | Subject C     | 22.84 |
+|  9 | Book 9  | Author 9            | Subject D     | 13.64 |
+| 10 | Book 10 | Author 10           | Subject B     | 18.11 |
+| 11 | Book 11 | Author 11           | Subject A     | 18.43 |
+| 12 | Book 12 | Author 12           | Subject C     | 24.94 |
+| 13 | Book 13 | Author 13           | Subject D     | 30.44 |
+| 14 | Book 14 | Author 14           | Subject B     | 10.49 |
+| 15 | Book 15 | Author 15           | Subject A     | 21.28 |
++----+---------+---------------------+---------------+-------+
+15 rows in set (0.00 sec)
+
+
+-- just we can remove WHERE clause from update query
+-- to update all records in tables.
+```
+
+## DELETE clause (DML)
+* can delect one or more rows
+* DELETE FROM Table_name WHERE condition ;
+```SQL
+-- delete single row
+mysql> DELETE FROM book WHERE id= 15 ;
+Query OK, 1 row affected (0.01 sec)
+
+-- check now only 14 rows are left
+14 rows in set (0.00 sec)
+
+```
+```SQl
+mysql> SELECT * From book ;
++----+---------+---------------------+---------------+-------+
+| id | name    | author              | subject       | price |
++----+---------+---------------------+---------------+-------+
+|  1 | Book 1  | Yashwant P Kanetkar | C programming | 24.62 |
+|  2 | Book 2  | Author 2            | Subject B     | 26.20 |
+|  3 | Book 3  | Author 3            | Subject C     | 16.26 |
+|  4 | Book 4  | Author 4            | Subject A     | 38.10 |
+|  5 | Book 5  | Author 5            | Subject D     | 10.49 |
+|  6 | Book 6  | Author 6            | Subject B     | 34.13 |
+|  7 | Book 7  | Author 7            | Subject A     | 25.40 |
+|  8 | Book 8  | Author 8            | Subject C     | 22.84 |
+|  9 | Book 9  | Author 9            | Subject D     | 13.64 |
+| 10 | Book 10 | Author 10           | Subject B     | 18.11 |
+| 11 | Book 11 | Author 11           | Subject A     | 18.43 |
+| 12 | Book 12 | Author 12           | Subject C     | 24.94 |
+| 13 | Book 13 | Author 13           | Subject D     | 30.44 |
+| 14 | Book 14 | Author 14           | Subject B     | 10.49 |
++----+---------+---------------------+---------------+-------+
+14 rows in set (0.00 sec)
+
+```
+
+-
+-0
+-
+- now delete multiple rows 
+
+```SQL
+-- now delete all books from Subject C
+DELETE FROM book WHERE subject = 'Subject C';
+
+mysql> DELETE FROM book WHERE subject = 'Subject C';
+Query OK, 3 rows affected (0.01 sec)
+
+mysql> SELECT * FROM book;
++----+---------+---------------------+---------------+-------+
+| id | name    | author              | subject       | price |
++----+---------+---------------------+---------------+-------+
+|  1 | Book 1  | Yashwant P Kanetkar | C programming | 24.62 |
+|  2 | Book 2  | Author 2            | Subject B     | 26.20 |
+|  4 | Book 4  | Author 4            | Subject A     | 38.10 |
+|  5 | Book 5  | Author 5            | Subject D     | 10.49 |
+|  6 | Book 6  | Author 6            | Subject B     | 34.13 |
+|  7 | Book 7  | Author 7            | Subject A     | 25.40 |
+|  9 | Book 9  | Author 9            | Subject D     | 13.64 |
+| 10 | Book 10 | Author 10           | Subject B     | 18.11 |
+| 11 | Book 11 | Author 11           | Subject A     | 18.43 |
+| 13 | Book 13 | Author 13           | Subject D     | 30.44 |
+| 14 | Book 14 | Author 14           | Subject B     | 10.49 |
++----+---------+---------------------+---------------+-------+
+11 rows in set (0.00 sec)
+```
+
+- now delete all records from table
+```SQL
+DELETE FROM books ;
+
+mysql> DELETE FROM book;
+Query OK, 11 rows affected (0.00 sec)
+
+mysql> SELECT * from book;
+Empty set (0.00 sec)
+
+-- but table is there 
+mysql> DESC book ;
++---------+---------------+------+-----+---------+-------+
+| Field   | Type          | Null | Key | Default | Extra |
++---------+---------------+------+-----+---------+-------+
+| id      | int           | NO   | PRI | NULL    |       |
+| name    | varchar(255)  | YES  |     | NULL    |       |
+| author  | varchar(255)  | YES  |     | NULL    |       |
+| subject | varchar(255)  | YES  |     | NULL    |       |
+| price   | decimal(10,2) | YES  |     | NULL    |       |
++---------+---------------+------+-----+---------+-------+
+```
+
+### DDL - to delete all rows at once
+```SQL
+TRUNCATE TABLE book ;
+-- it will 0 rows affect 
+-- same as we did above, all rows are delete but table is there
+
+```
+#### in DML it will show how many rows are affected , BUT not in DDL 
+
+## DDL - DROP 
+```SQL
+DROP TABLE book ;
+
+
+mysql> SELECT * from book;
++----+---------+-----------+-----------+-------+
+| id | name    | author    | subject   | price |
++----+---------+-----------+-----------+-------+
+|  1 | Book 1  | Author 1  | Subject A | 19.99 |
+|  2 | Book 2  | Author 2  | Subject B | 24.95 |
+|  3 | Book 3  | Author 3  | Subject C | 15.49 |
+|  4 | Book 4  | Author 4  | Subject A | 29.99 |
+|  5 | Book 5  | Author 5  | Subject D |  9.99 |
+|  6 | Book 6  | Author 6  | Subject B | 32.50 |
+|  7 | Book 7  | Author 7  | Subject A | 19.99 |
+|  8 | Book 8  | Author 8  | Subject C | 21.75 |
+|  9 | Book 9  | Author 9  | Subject D | 12.99 |
+| 10 | Book 10 | Author 10 | Subject B | 17.25 |
+| 11 | Book 11 | Author 11 | Subject A | 14.50 |
+| 12 | Book 12 | Author 12 | Subject C | 23.75 |
+| 13 | Book 13 | Author 13 | Subject D | 28.99 |
+| 14 | Book 14 | Author 14 | Subject B |  9.99 |
+| 15 | Book 15 | Author 15 | Subject A | 16.75 |
++----+---------+-----------+-----------+-------+
+15 rows in set (0.00 sec)
+
+mysql> DROP TABLE book;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * from book;
+ERROR 1146 (42S02): Table 'cdacdb.book' doesn't exist
+
+-- with the DROP command table is deleted from database
+-- there is nothing in database named 'book' ;
+-- it deletes structure as well as data
+```
+
+```SQL
+-- if we try to drop non existing table 
+mysql> DROP TABLE book;
+ERROR 1051 (42S02): Unknown table 'cdacdb.book'
+-- we already drpoed it once
+
+-- to avoid this unneccessary error 
+-- bcoz deleteing non-existing table should not give error
+
+```
+- DELETE IF EXISTS
+```SQL
+DROP TABLE IF EXISTS book ;
+mysql> DROP TABLE IF EXISTS book ;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+-- see query succefull , no error just warning 
+-- but it will also successful in case table exists 
+-- if table not exists then only warning 
+```
+
+![ ](image-17.png)
+
+## DELETE (DML)vs TRUNCATE (DDL)vs DROP (DDL) 
+- Query implememtation changes from RDBMS to RDBMS.
+- depends on vendor
+- 
+- In general 
+- database --> is directory 
+- table --> file
+- table file --> data + metadata
+- 
+- 
+- 
+- when we say we delete the row from table
+![in case of DELETE ](image-18.png)
+- DELETE from book ;
+- marked each row to delete 
+- not actually deleting
+- only marked that space to reuse for next 
+- space occupied by the rows can be overwritten/reused by new records
+- actual table file size is not changed much 
+- DELETE is DML query --> can be roll back
+- 
+- 
+- 
+- 
+- TRUNCATE TABLE book;
+- ![in TRUNCATE](image-19.png)
+- in TRUNCATE 
+- it resize the Table file 
+- only structure(metadata) is kept
+- all rows space is realesee
+- much faster operation for huge TABLE
+- TRUNCATE is DDL query --> never be roll back
+- 
+- 
+- 
+- DROP TABLE IF EXISTS book;
+- it will delete entire file 
+- DELETES TABLE file --> structure + data
+- it is DDL query --> can't roll back
+- faster than TRUNCATE 
+ #### DROP SCHEMA
+ - DROP DATABASE cdacdb ;
+
+
+ ### SEEKING HELP
+ - HELP is client commend to seek help on commands and functions
+    - HELP SELECT ;
+    - HELP Functions;
+
+
+
+```SQL
+mysql> SELECT empno , ename , sal from emp WHERE SUBSTRING(ename,1,1) BETWEEN '
+F' AND 'K' ;
++-------+-------+---------+
+| empno | ename | sal     |
++-------+-------+---------+
+|  7566 | Jones | 2975.00 |
+|  7839 | King  | 5000.00 |
+|  7902 | Ford  | 3000.00 |
++-------+-------+---------+
+3 rows in set (0.00 sec)
+```
+
+
+
+
+
+
+
+ 
