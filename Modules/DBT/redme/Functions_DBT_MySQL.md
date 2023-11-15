@@ -751,4 +751,174 @@ mysql> SELECT LPAD('CHANDRAYAN' , '13' , ' ');
 | Software Engineering Principles | SOFTWARE ENGINEERING PRINCIPLES | software engineering principles |
 +---------------------------------+---------------------------------+---------------------------------+
  ```
- 
+
+
+ ```SQL
+ check equallity in strings
+ mysql> SELECT 'SUNbeam'='sunbeam' ;
++---------------------+
+| 'SUNbeam'='sunbeam' |
++---------------------+
+|                   1 |
++---------------------+
+
+mysql> SELECT 'SUNbeam'='sunDAY' ;
++--------------------+
+| 'SUNbeam'='sunDAY' |
++--------------------+
+|                  0 |
++--------------------+
+
+
+SELECT SUBSTRING('sunday' , 1 , 3)=LEFT('sunday' , 3) , SUBSTRING('SUNDAY' , -2)=RIGHT('sunday' , 2) ;
++------------------------------------------------+----------------------------------------------+
+| SUBSTRING('sunday' , 1 , 3)=LEFT('sunday' , 3) | SUBSTRING('SUNDAY' , -2)=RIGHT('sunday' , 2) |
++------------------------------------------------+----------------------------------------------+
+|                                              1 |                                            1 |
++------------------------------------------------+----------------------------------------------+
+ ```
+
+ ### INSTR
+ - INSTR(str,substr)
+
+- Returns the position of the first occurrence of substring substr in
+string str. This is the same as the two-argument form of LOCATE(),
+except that the order of the arguments is reversed.
+```SQL
+mysql> SELECT INSTR('SUNDAY' , 'e' );
++------------------------+
+| INSTR('SUNDAY' , 'e' ) |
++------------------------+
+|                      0 |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT INSTR('SUNDAY' , 'DAY' );
++--------------------------+
+| INSTR('SUNDAY' , 'DAY' ) |
++--------------------------+
+|                        4 |
++--------------------------+
+
+
+-- combination of 
+mysql> SELECT SUBSTRING('SUNDAY is fun DAY' ,1 , INSTR( 'SUNDAY is fun DAY' , ' ') );
++------------------------------------------------------------------------+
+| SUBSTRING('SUNDAY is fun DAY' ,1 , INSTR( 'SUNDAY is fun DAY' , ' ') ) |
++------------------------------------------------------------------------+
+| SUNDAY                                                                 |
++------------------------------------------------------------------------+
+```
+
+### SUBSTRING_INDEX Function
+```SQL
+/*
+Name: 'SUBSTRING_INDEX'
+Description:
+Syntax:
+SUBSTRING_INDEX(str,delim,count)
+
+Returns the substring from string str before count occurrences of the
+delimiter delim. If count is positive, everything to the left of the
+final delimiter (counting from the left) is returned. If count is
+negative, everything to the right of the final delimiter (counting from
+the right) is returned. SUBSTRING_INDEX() performs a case-sensitive
+match when searching for delim.
+
+URL: https://dev.mysql.com/doc/refman/8.0/en/string-functions.html
+
+Examples:
+mysql> SELECT SUBSTRING_INDEX('www.mysql.com', '.', 2);
+        -> 'www.mysql'
+mysql> SELECT SUBSTRING_INDEX('www.mysql.com', '.', -2);
+        -> 'mysql.com'
+```
+```SQL
+
+-- substring_index --> takes string , dilimiter , and pos of occorance ot dilimmiter 
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 1) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 1) |
++--------------------------------------------------------------------+
+| Returns                                                            |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 2) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 2) |
++--------------------------------------------------------------------+
+| Returns the                                                        |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 4) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 4) |
++--------------------------------------------------------------------+
+| Returns the substring from                                         |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+-- only 5 spaces is there but try to access at 6th space or more
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 6) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 6) |
++--------------------------------------------------------------------+
+| Returns the substring from string str                              |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 7) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 7) |
++--------------------------------------------------------------------+
+| Returns the substring from string str                              |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 0) ;
++--------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , 0) |
++--------------------------------------------------------------------+
+|                                                                    |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+-- we can put position from rear end also
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , -1 );
++----------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , -1 ) |
++----------------------------------------------------------------------+
+| str                                                                  |
++----------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUBSTRING_INDEX('Returns the substring from string str' , ' ' , -3 );
++----------------------------------------------------------------------+
+| SUBSTRING_INDEX('Returns the substring from string str' , ' ' , -3 ) |
++----------------------------------------------------------------------+
+| from string str                                                      |
++----------------------------------------------------------------------+
+```
+```SQL
+mysql> SELECT subject , SUBSTRING_INDEX( subject , ' ' , 1) from book;
++----------------------+-------------------------------------+
+| subject              | SUBSTRING_INDEX( subject , ' ' , 1) |
++----------------------+-------------------------------------+
+| Programming          | Programming                         |
+| Programming          | Programming                         |
+| Web Development      | Web                                 |
+| Database Management  | Database                            |
+| Programming          | Programming                         |
+| Programming          | Programming                         |
+| Programming          | Programming                         |
+| Web Development      | Web                                 |
+| Programming          | Programming                         |
+| Software Engineering | Software                            |
++----------------------+-------------------------------------+
+```
